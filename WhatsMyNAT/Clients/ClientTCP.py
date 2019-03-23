@@ -37,6 +37,7 @@ def main(serverAddr, serverPort, port, address):
 
     log.info('External address and port: [{0}]:{1}'.format(externalAddr, externalPort))
 
+
 def parseArgs(args):
     serverAddr = args[1]
 

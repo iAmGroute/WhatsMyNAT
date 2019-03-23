@@ -55,8 +55,8 @@ def parseArgs(args):
 
 if __name__ == '__main__':
     try:
-        port, address = parseArgs(sys.argv)
+        config = parseArgs(sys.argv)
     except Exception as e:
         print('Usage: python3 ServerTCP.py <port> [<nicAddress>]')
     else:
-        main(port, address)
+        main(*config)
