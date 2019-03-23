@@ -23,15 +23,18 @@ class ServerTCP:
             reply = '{0}\n{1}\n'.format(*addr)
             conn.sendall(bytes(reply, 'utf-8'))
 
+
 def main(port, address):
+    serverTCP = ServerTCP(port, address)
     while True:
         try:
-            self.serverTCP.task()
+            serverTCP.task()
         except KeyboardInterrupt:
             log.info('Exit requested by keyboard')
             break
         except Exception as e:
             log.exception(e)
+
 
 def parseArgs(args):
     port = int(args[1])
