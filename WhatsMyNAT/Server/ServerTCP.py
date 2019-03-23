@@ -12,7 +12,7 @@ class ServerTCP:
         self.socket.listen()
 
     def __del__(self):
-        self.socket.shutdown(socke.SHUT_RDWR)
+        self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
 
     def task(self):
