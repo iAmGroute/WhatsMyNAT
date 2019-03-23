@@ -2,7 +2,7 @@
 import sys
 
 from NatType import NatType
-from .Clients.ClientTCP import ClientTCP
+from Clients.ClientTCP import ClientTCP
 
 from Servers import servers
 
