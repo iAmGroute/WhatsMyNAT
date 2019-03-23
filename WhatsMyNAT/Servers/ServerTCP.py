@@ -46,5 +46,5 @@ if __name__ == '__main__':
         port, address = parseArgs(sys.argv)
     except Exception as e:
         print('Usage: python3 ServerTCP.py <port> [<address>]')
-    finally:
+    else:
         main(port, address)
