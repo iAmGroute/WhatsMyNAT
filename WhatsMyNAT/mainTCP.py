@@ -17,7 +17,7 @@ def main(port, address):
     print(' id | port  | local -> external |   external ')
     #     ' 35 | 12345 | 22222 -> 54321    | 123.123.123.123'
     for i in range(len(servers)):
-        print(' {0:2d} | {1:5d} | {2:5d} -> {3:5d} | {4}'.format(i, servers[i][1], port, externals[i][0], externals[i][1]))
+        print(' {0:2d} | {1:5d} | {2:5d} -> {3:5d} | {4}'.format(i, servers[i][1], port, externals[i][1], externals[i][0]))
 
     kind = NatType.undetermined
     # TODO: find a way to determine if there is no NAT at all,
