@@ -25,7 +25,7 @@ class ClientTCP:
 
         reply = reply.decode('utf-8').split('\n')
         externalAddr = reply[0]
-        externalPort = reply[1]
+        externalPort = int(reply[1])
         return externalAddr, externalPort
 
 
