@@ -3,11 +3,12 @@ import logging
 import threading
 
 # from ServerUDP import ServerUDP
-from ServerTCP import ServerTCP
+from WhatsMyNAT.Server.ServerTCP import ServerTCP
 
 class ThreadTCP(threading.Thread):
 
     def __init__(self, port, address):
+        threading.Thread.__init__(self)
         self.serverTCP = ServerTCP(port, address)
 
     def run(self):
