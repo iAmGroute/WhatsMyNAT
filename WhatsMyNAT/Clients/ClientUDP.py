@@ -2,6 +2,7 @@
 import sys
 import logging
 import socket
+# import random
 
 log = logging.getLogger(__name__)
 
@@ -19,10 +20,14 @@ class ClientUDP:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.settimeout(2)
             s.bind((self.address, self.port))
+            # token = str(random.randrange(1000000000000000, 9999999999999999))
+            # s.sendto(bytes(token, 'utf-8'), (serverAddr, serverPort))
             s.sendto(b'', (serverAddr, serverPort))
+            # while True:
             reply, addr = s.recvfrom(1024)
 
-        log.info('Got reply from server : {0}'.format(reply))
+        log.info('Got reply from server : [{0}]:{1}'.format(*addr))
+        log.info('    content: {0}'.format(reply))
 
         reply = reply.decode('utf-8').split('\n')
         externalAddr = reply[0]
