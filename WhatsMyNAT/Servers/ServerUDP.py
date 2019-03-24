@@ -98,6 +98,7 @@ def parseArgs(args):
         cAddress = args[3]
         cPort    = int(args[4])
         assert 0 < cPort < 65536
+        counterpart = (cAddress, cPort)
 
     cePort = 0
     if len(args) > 5:
