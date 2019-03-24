@@ -10,7 +10,7 @@ class ServerTCP:
     def __init__(self, port, address='0.0.0.0'):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.settimeout(8)
+        # s.settimeout(8)
         s.bind((address, port))
         s.listen()
         self.socket = s
@@ -42,8 +42,8 @@ def main(port, address):
             log.info('Exit requested by keyboard')
             break
 
-        except socket.timeout:
-            pass
+        # except socket.timeout:
+        #     pass
 
         except Exception as e:
             log.exception(e)
