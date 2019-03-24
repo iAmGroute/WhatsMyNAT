@@ -19,7 +19,12 @@ class ClientUDP:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.bind((self.address, self.port))
             s.sendto(b'', (serverAddr, serverPort))
-            reply = s.recvfrom(1024)
+            reply = None
+            for i in range(5):
+                data, addr = s.recvfrom(1024)
+                if addr == (serverAddr, serverPort):
+                    reply = data
+                    break
 
         log.info('Got reply from server : {0}'.format(reply))
 
