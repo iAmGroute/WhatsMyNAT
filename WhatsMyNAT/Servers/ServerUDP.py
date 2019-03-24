@@ -91,12 +91,27 @@ def parseArgs(args):
     if len(args) > 2:
         address = args[2]
 
-    return port, address
+    counterpart = None
+    if len(args) > 4:
+        cAddress = args[3]
+        cPort    = int(args[4])
+        assert 0 < cPort < 65536
+
+    cePort = 0
+    if len(args) > 5:
+        cePort = int(args[5])
+        assert 0 <= cePort < 65536
+
+    ceAddress = '0.0.0.0'
+    if len(args) > 6:
+        ceAddress = args[6]
+
+    return port, address, counterpart, (ceAddress, cePort)
 
 if __name__ == '__main__':
     try:
         config = parseArgs(sys.argv)
     except Exception as e:
-        print('Usage: python3 ServerUDP.py <port> [<nicAddress>] [<cAddress>] [<cPort>] [<ceAddress>] [cePort]')
+        print('Usage: python3 ServerUDP.py <port> [<nicAddress>] [<cAddress> <cPort>] [cePort] [<ceAddress>]')
     else:
         main(*config)
