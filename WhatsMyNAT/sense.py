@@ -1,12 +1,13 @@
 
 import sys
 
-from NatType import NatType
+from names import *
 from Clients.ClientTCP import ClientTCP
+from Clients.ClientUDP import ClientUDP
 
 from Servers import servers
 
-def main(port, address):
+def main(ClientClass, port, address):
 
     print()
     print('-------------- Server List --------------------------')
@@ -14,11 +15,11 @@ def main(port, address):
     print('----|-------|----------------------------------------')
     #     ' 35 | 12345 | a_very_long_url.somewhere.example.com'
 
-    clientTCP = ClientTCP(port, address)
+    client = ClientClass(port, address)
     externals = []
     for i in range(len(servers)):
         print(' {0:2d} | {1:5d} | {2}'.format(i, servers[i][1], servers[i][0]))
-        externals.append(clientTCP.getAddressFrom(*servers[i]))
+        externals.append(client.getAddressFrom(*servers[i]))
 
     print()
     print('---------------- Results ----------------------------')
@@ -62,4 +63,5 @@ if __name__ == '__main__':
     except Exception as e:
         print('Usage: python3 mainTCP.py <localPort> [<nicAddress>]')
     else:
-        main(*config)
+        main(ClientTCP, *config)
+        main(ClientUDP, *config)
