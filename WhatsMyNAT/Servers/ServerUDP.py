@@ -37,12 +37,14 @@ class ServerUDP:
 
     def stopC(self):
         s = self.socketC
-        s.shutdown(socket.SHUT_RDWR)
-        s.close()
+        if s:
+            s.shutdown(socket.SHUT_RDWR)
+            s.close()
         self.socketC = None
         log.info('Stopping counterpart socket')
 
     def stop(self):
+        self.stopC()
         self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
         log.info('Server stopped')
