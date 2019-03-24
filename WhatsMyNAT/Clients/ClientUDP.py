@@ -17,14 +17,10 @@ class ClientUDP:
 
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            s.settimeout(2)
             s.bind((self.address, self.port))
             s.sendto(b'', (serverAddr, serverPort))
-            reply = None
-            for i in range(5):
-                data, addr = s.recvfrom(1024)
-                if addr == (serverAddr, serverPort):
-                    reply = data
-                    break
+            reply, addr = s.recvfrom(1024)
 
         log.info('Got reply from server : {0}'.format(reply))
 
