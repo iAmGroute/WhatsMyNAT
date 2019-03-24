@@ -17,6 +17,7 @@ class ClientTCP:
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            s.settimeout(2)
             s.bind((self.address, self.port))
             s.connect((serverAddr, serverPort))
             reply = s.recv(1024)
