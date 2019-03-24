@@ -112,6 +112,6 @@ if __name__ == '__main__':
     try:
         config = parseArgs(sys.argv)
     except Exception as e:
-        print('Usage: python3 ServerUDP.py <port> [<nicAddress>] [<cAddress> <cPort>] [cePort] [<ceAddress>]')
+        print('Usage: python3 ServerUDP.py <port> [<nicAddress>] [<cAddress> <cPort>] [<cePort>] [<ceAddress>]')
     else:
         main(*config)
