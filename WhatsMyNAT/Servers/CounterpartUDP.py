@@ -16,7 +16,7 @@ class CounterpartUDP:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         # s.settimeout(8)
-        s.bind((address, port))
+        s.bind((probeAddress, probePort))
         self.socketP = s
         log.info('Server started on [{0}]:{1}'.format(address, port))
         log.info('    probing using [{0}]:{1}'.format(probeAddress, probePort))
@@ -38,13 +38,13 @@ class CounterpartUDP:
             log.exception(e)
             return
         log.info('    destination: [{0}]:{1}'.format(remoteAddr, remotePort))
-        log.info('    with token x' + token.hex())
+        log.info('    with token : {0}'.format(token))
         for _ in range(3):
             self.socket.sendto(data, (remoteAddr, remotePort))
 
 
 def main(port, address, probePort, probeAddress):
-    logging.basicConfig(format='%(created).3f [UDP.%(levelname)s] %(message)s', level=logging.INFO)
+    logging.basicConfig(format='%(created).3f [cUDP.%(levelname)s] %(message)s', level=logging.INFO)
 
     counterpartUDP = CounterpartUDP(port, address, probePort, probeAddress)
 

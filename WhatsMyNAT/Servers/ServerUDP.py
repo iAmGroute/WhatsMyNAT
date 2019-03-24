@@ -55,7 +55,7 @@ class ServerUDP:
         reply = '{0}\n{1}\n'.format(*addr)
         if len(data) == 16:
             # Received token for reverse testing
-            log.info('    with token x' + data.hex())
+            log.info('    with token : {0}'.format(data))
             if self.socketC:
                 for _ in range(3):
                     self.socketC.sendto(data + bytes(reply, 'utf-8'), self.counterpart)
