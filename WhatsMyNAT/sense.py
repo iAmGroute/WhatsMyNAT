@@ -7,9 +7,8 @@ from Clients.ClientUDP import ClientUDP
 
 from Servers import servers
 
-def main(ClientClass, port, address):
+def runTest(ClientClass, port, address):
 
-    print()
     print('-------------- Server List --------------------------')
     print(' id |  port |                address                 ')
     print('----|-------|----------------------------------------')
@@ -21,7 +20,6 @@ def main(ClientClass, port, address):
         print(' {0:2d} | {1:5d} | {2}'.format(i, servers[i][1], servers[i][0]))
         externals.append(client.getAddressFrom(*servers[i]))
 
-    print()
     print('---------------- Results ----------------------------')
     print('  Server    |       our Port       |   our Address   ')
     print(' id |  port |    local -> external |     external    ')
@@ -43,25 +41,39 @@ def main(ClientClass, port, address):
         # and symmetric without action from the server.
         sense = Sensitivity.portSensitive
 
+    return sense
+
+
+def main(portTCP, portUDP, address):
+    print('Running TCP sensitivity test')
+    senseTCP = runTest(ClientTCP, portTCP, address)
     print()
-    print('TCP sensitivity: ' + sense.name)
+    print('Running UDP sensitivity test')
+    senseUDP = runTest(ClientUDP, portUDP, address)
+    print()
+    print('TCP sensitivity: ' + senseTCP.name)
+    print('UDP sensitivity: ' + senseUDP.name)
 
 
 def parseArgs(args):
-    port = int(args[1])
-    assert 0 < port < 65536
+    portTCP = int(args[1])
+    assert 0 < portTCP < 65536
+
+    portUDP = portTCP
+    if len(args) > 2:
+        portUDP = int(args[2])
+        assert 0 < portUDP < 65536
 
     address = '0.0.0.0'
-    if len(args) > 2:
-        address = args[2]
+    if len(args) > 3:
+        address = args[3]
 
-    return port, address
+    return portTCP, portUDP, address
 
 if __name__ == '__main__':
     try:
         config = parseArgs(sys.argv)
     except Exception as e:
-        print('Usage: python3 mainTCP.py <localPort> [<nicAddress>]')
+        print('Usage: python3 mainTCP.py <localPortTCP> [<localPortUDP>] [<nicAddress>]')
     else:
-        main(ClientTCP, *config)
-        main(ClientUDP, *config)
+        main(*config)
