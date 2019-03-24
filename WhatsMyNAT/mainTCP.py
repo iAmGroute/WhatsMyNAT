@@ -29,23 +29,21 @@ def main(port, address):
     for i in range(len(servers)):
         print(' {0:2d} | {1:5d} |    {2:5d} -> {3:5d}    | {4}'.format(i, servers[i][1], port, externals[i][1], externals[i][0]))
 
-    kind = NatType.undetermined
-    # TODO: find a way to determine if there is no NAT at all,
-    #       (getting the internal address used is not trivial for all cases)
+    sense = Sensitivity.undetermined
     s1p1 = externals[0]
     s1p2 = externals[1]
     s2p1 = externals[2]
     if s1p1 == s1p2 == s2p1:
-        kind = NatType.fullCone
+        sense = Sensitivity.insensitive
     elif s1p1 == s1p2:
-        kind = NatType.ipRestricted
+        sense = Sensitivity.ipSensitive
     else:
         # There is no way to differentiate between portRestricted
         # and symmetric without action from the server.
-        kind = NatType.symmetric
+        sense = Sensitivity.portSensitive
 
     print()
-    print('NAT type: ' + kind.name)
+    print('TCP sensitivity: ' + sense.name)
 
 
 def parseArgs(args):
@@ -62,6 +60,6 @@ if __name__ == '__main__':
     try:
         config = parseArgs(sys.argv)
     except Exception as e:
-        print('Usage: python3 ClientTCP.py <localPort> [<nicAddress>]')
+        print('Usage: python3 mainTCP.py <localPort> [<nicAddress>]')
     else:
         main(*config)

@@ -1,10 +1,14 @@
 
 from enum import Enum
 
-class NatType(Enum):
+class Permissiveness(Enum):
     undetermined   = -1
-    noNat          = 0
-    fullCone       = 1
-    ipRestricted   = 2
-    portRestricted = 3
-    symmetric      = 4
+    permissive     = 0
+    ipRestricted   = 1
+    portRestricted = 2
+
+class Sensitivity(Enum):
+	undetermined  = -1
+	insensitive   = 0
+	ipSensitive   = 1
+	portSensitive = 2
