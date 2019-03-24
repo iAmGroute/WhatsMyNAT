@@ -1,5 +1,6 @@
 
 import sys
+import random
 
 from names import *
 from Clients.ClientTCP import ClientTCP
@@ -56,10 +57,12 @@ def main(portTCP, portUDP, address):
 
 
 def parseArgs(args):
-    portTCP = int(args[1])
-    assert 0 < portTCP < 65536
+    portTCP = random.randrange(10000, 65000)
+    if len(args) > 1:
+        portTCP = int(args[1])
+        assert 0 < portTCP < 65536
 
-    portUDP = portTCP
+    portUDP = random.randrange(10000, 65000)
     if len(args) > 2:
         portUDP = int(args[2])
         assert 0 < portUDP < 65536
@@ -74,6 +77,6 @@ if __name__ == '__main__':
     try:
         config = parseArgs(sys.argv)
     except Exception as e:
-        print('Usage: python3 mainTCP.py <localPortTCP> [<localPortUDP>] [<nicAddress>]')
+        print('Usage: python3 mainTCP.py [<localPortTCP>] [<localPortUDP>] [<nicAddress>]')
     else:
         main(*config)
