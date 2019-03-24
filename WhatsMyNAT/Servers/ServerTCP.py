@@ -8,9 +8,12 @@ log = logging.getLogger(__name__)
 class ServerTCP:
 
     def __init__(self, port, address='0.0.0.0'):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.bind((address, port))
-        self.socket.listen()
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.settimeout(8)
+        s.bind((address, port))
+        s.listen()
+        self.socket = s
         log.info('Server started on [{0}]:{1}'.format(address, port))
 
     def stop(self):
@@ -38,6 +41,9 @@ def main(port, address):
         except KeyboardInterrupt:
             log.info('Exit requested by keyboard')
             break
+
+        except socket.timeout:
+            pass
 
         except Exception as e:
             log.exception(e)
