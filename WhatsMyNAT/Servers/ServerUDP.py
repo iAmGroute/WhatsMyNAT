@@ -25,7 +25,7 @@ class ServerUDP:
 
 
 def main(port, address):
-    logging.basicConfig(format='%(created).3f [%(levelname)s] %(message)s', level=logging.INFO)
+    logging.basicConfig(format='%(created).3f [UDP.%(levelname)s] %(message)s', level=logging.INFO)
 
     serverUDP = ServerUDP(port, address)
 

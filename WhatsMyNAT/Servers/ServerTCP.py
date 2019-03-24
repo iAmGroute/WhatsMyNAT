@@ -27,7 +27,7 @@ class ServerTCP:
 
 
 def main(port, address):
-    logging.basicConfig(format='%(created).3f [%(levelname)s] %(message)s', level=logging.INFO)
+    logging.basicConfig(format='%(created).3f [TCP.%(levelname)s] %(message)s', level=logging.INFO)
 
     serverTCP = ServerTCP(port, address)
 
