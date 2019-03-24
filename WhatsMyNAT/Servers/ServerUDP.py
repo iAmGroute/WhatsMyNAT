@@ -65,10 +65,10 @@ class ServerUDP:
             self.socket.sendto(bytes(reply, 'utf-8'), addr)
 
 
-def main(port, address):
+def main(port, address, counterpart, endpointC):
     logging.basicConfig(format='%(created).3f [UDP.%(levelname)s] %(message)s', level=logging.INFO)
 
-    serverUDP = ServerUDP(port, address)
+    serverUDP = ServerUDP(port, address, counterpart, endpointC)
 
     while True:
         try:
