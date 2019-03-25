@@ -113,8 +113,12 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+
 # Server list
 /serverList.py
+
+# Temporary scripts
+/startServers.sh
 
 # Nohup output
 nohup.out
