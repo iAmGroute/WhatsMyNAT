@@ -16,7 +16,10 @@ class Connector:
         self.socket = s
         self.log.info(t('Started on\t [{0}]:{1}'.format(address, port)))
 
-    def __del__(self):
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type=None, value=None, traceback=None):
         self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
         self.log.info(t('Stopped'))
