@@ -4,6 +4,8 @@ import logging
 import socket
 # import random
 
+from .Common.Connector import Connector
+
 log = logging.getLogger(__name__)
 
 class ClientUDP:
@@ -11,22 +13,15 @@ class ClientUDP:
     def __init__(self, port, address='0.0.0.0'):
         self.port    = port
         self.address = address
-        log.info('Local address and port: [{0}]:{1}'.format(address, port))
 
     def getAddressFrom(self, serverAddr, serverPort):
-        log.info('Connecting to server  : [{0}]:{1}'.format(serverAddr, serverPort))
-
-        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            s.settimeout(2)
-            s.bind((self.address, self.port))
+        with Connector(log, socket.SOCK_DGRAM, 2, self.port, self.address) as con:
             # token = str(random.randrange(1000000000000000, 9999999999999999))
-            # s.sendto(bytes(token, 'utf-8'), (serverAddr, serverPort))
-            s.sendto(b'', (serverAddr, serverPort))
+            # con.sendto(bytes(token, 'utf-8'), (serverAddr, serverPort))
+            con.sendto(b'', (serverAddr, serverPort))
             # while True:
-            reply, addr = s.recvfrom(1024)
+            reply, addr = con.recvfrom(1024)
 
-        log.info('Got reply from server : [{0}]:{1}'.format(*addr))
         log.info('    content: {0}'.format(reply))
 
         reply = reply.decode('utf-8').split('\n')

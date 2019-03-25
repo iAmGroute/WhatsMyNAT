@@ -3,6 +3,8 @@ import sys
 import logging
 import socket
 
+from .Common.Connector import Connector
+
 log = logging.getLogger(__name__)
 
 class ClientTCP:
@@ -10,19 +12,13 @@ class ClientTCP:
     def __init__(self, port, address='0.0.0.0'):
         self.port    = port
         self.address = address
-        log.info('Local address and port: [{0}]:{1}'.format(address, port))
 
     def getAddressFrom(self, serverAddr, serverPort):
-        log.info('Connecting to server  : [{0}]:{1}'.format(serverAddr, serverPort))
+        with Connector(log, socket.SOCK_STREAM, 2, self.port, self.address) as con:
+            con.connect((serverAddr, serverPort))
+            reply = con.recv(1024)
 
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            s.settimeout(2)
-            s.bind((self.address, self.port))
-            s.connect((serverAddr, serverPort))
-            reply = s.recv(1024)
-
-        log.info('Got reply from server : {0}'.format(reply))
+        log.info('    reply: {0}'.format(reply))
 
         reply = reply.decode('utf-8').split('\n')
         externalAddr = reply[0]
