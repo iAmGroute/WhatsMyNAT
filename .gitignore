@@ -119,6 +119,7 @@ dmypy.json
 
 # Temporary scripts
 /startServers.sh
+/kill.sh
 
 # Nohup output
 nohup.out
