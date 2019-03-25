@@ -20,7 +20,8 @@ class Connector:
         return self
 
     def __exit__(self, type=None, value=None, traceback=None):
-        self.socket.shutdown(socket.SHUT_RDWR)
+        # if self.socket.type == socket.SOCK_STREAM:
+        #     self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
         self.log.info(t('Stopped'))
 
