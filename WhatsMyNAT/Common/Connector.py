@@ -26,12 +26,12 @@ class Connector:
 
     def recvfrom(self, bufferSize):
         data, addr = self.socket.recvfrom(bufferSize)
-        self.log.info(t('Received {0} Bytes from\t [{1}]:{2}'.format(prefixIEC(len(data)), *addr)))
+        self.log.info(t('Received {0}Bytes from\t [{1}]:{2}'.format(prefixIEC(len(data)), *addr)))
         return data, addr
 
     def sendto(self, data, endpoint):
         sentSize = self.socket.sendto(data, endpoint)
-        self.log.info(t('Sent {0} Bytes to\t [{1}]:{2}'.format(prefixIEC(sentSize), *endpoint)))
+        self.log.info(t('Sent     {0}Bytes to\t [{1}]:{2}'.format(prefixIEC(sentSize), *endpoint)))
         return sentSize
 
     def listen(self):

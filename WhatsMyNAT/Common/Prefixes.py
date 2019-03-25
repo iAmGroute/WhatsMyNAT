@@ -7,11 +7,11 @@ def prefixIEC(number):
         if abs(number) < 1024.0:
             break
         number /= 1024.0
-    return '{0:3.1f}{1}'.format(number, prefixesIEC[i])
+    return '{0:6.1f}{1}'.format(number, prefixesIEC[i])
 
 def prefixISO(number):
     for i in range(len(prefixesISO) - 1):
         if abs(number) < 1000.0:
             break
         number /= 1000.0
-    return '{0:3.1f}{1}'.format(number, prefixesISO[i])
+    return '{0:5.1f}{1}'.format(number, prefixesISO[i])
