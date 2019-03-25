@@ -6,7 +6,7 @@ from names import *
 from Clients.ClientTCP import ClientTCP
 from Clients.ClientUDP import ClientUDP
 
-from Servers import servers
+from serverList import servers
 
 def runTest(ClientClass, port, address):
 

@@ -114,7 +114,7 @@ dmypy.json
 .pyre/
 
 # Server list
-/WhatsMyNAT/Servers.py
+/serverList.py
 
-# Nohup
+# Nohup output
 nohup.out
