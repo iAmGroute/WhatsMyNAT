@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 def main(clientClass, serverAddr, serverPort, port, address):
     with clientClass(port, address) as client:
-        externalAddr, externalPort = clientTCP.getAddressFrom(serverAddr, serverPort)
+        externalAddr, externalPort = client.getAddressFrom(serverAddr, serverPort)
 
     log.info('External address and port: [{0}]:{1}'.format(externalAddr, externalPort))
 

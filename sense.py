@@ -15,11 +15,12 @@ def runTest(clientClass, port, address):
     print('----|-------|----------------------------------------')
     #     ' 35 | 12345 | a_very_long_url.somewhere.example.com'
 
-    with clientClass(port, address) as client:
-        externals = []
-        for i in range(len(servers)):
-            print(' {0:2d} | {1:5d} | {2}'.format(i, servers[i][1], servers[i][0]))
-            externals.append(client.getAddressFrom(*servers[i]))
+    externals = []
+    for i in range(len(servers)):
+        print(' {0:2d} | {1:5d} | {2}'.format(i, servers[i][1], servers[i][0]))
+        with clientClass(port, address) as client:
+            ext = client.getAddressFrom(*servers[i])
+        externals.append(ext)
 
     print('---------------- Results ----------------------------')
     print('  Server    |       our Port       |   our Address   ')
