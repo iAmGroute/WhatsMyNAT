@@ -16,7 +16,7 @@ class ClientUDP:
     def __enter__(self):
         return self
 
-    def __exit__(self):
+    def __exit__(self, type=None, value=None, traceback=None):
         self.con.__exit__()
 
     def getAddressFrom(self, serverAddr, serverPort):
