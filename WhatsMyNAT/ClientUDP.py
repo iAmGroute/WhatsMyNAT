@@ -11,16 +11,20 @@ log = logging.getLogger(__name__)
 class ClientUDP:
 
     def __init__(self, port, address='0.0.0.0'):
-        self.port    = port
-        self.address = address
+        self.con = Connector(log, socket.SOCK_DGRAM, 2, self.port, self.address)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self):
+        self.con.__exit__()
 
     def getAddressFrom(self, serverAddr, serverPort):
-        with Connector(log, socket.SOCK_DGRAM, 2, self.port, self.address) as con:
-            # token = str(random.randrange(1000000000000000, 9999999999999999))
-            # con.sendto(bytes(token, 'utf-8'), (serverAddr, serverPort))
-            con.sendto(b'', (serverAddr, serverPort))
-            # while True:
-            reply, addr = con.recvfrom(1024)
+        # token = str(random.randrange(1000000000000000, 9999999999999999))
+        # self.con.sendto(bytes(token, 'utf-8'), (serverAddr, serverPort))
+        self.con.sendto(b'', (serverAddr, serverPort))
+        # while True:
+        reply, addr = self.con.recvfrom(1024)
 
         log.info('    content: {0}'.format(reply))
 
