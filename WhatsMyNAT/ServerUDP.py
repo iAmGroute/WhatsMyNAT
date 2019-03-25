@@ -17,8 +17,9 @@ class ServerUDP:
             log.info('    with counterpart [{0}]:{1}'.format(*counterpart))
             if endpointC:
                 log.info('    using [{0}]:{1}'.format(*endpointC))
-            self.conC = Connector(logC, socket.SOCK_DGRAM, 2,
-                                  *(endpointC if endpointC else (self.address, 0)))
+                self.conC = Connector(logC, socket.SOCK_DGRAM, 2, endpointC[1], endpointC[0])
+            else:
+                self.conC = Connector(logC, socket.SOCK_DGRAM, 2, 0, self.address)
 
     def task(self):
         data, addr = self.con.recvfrom(64)
