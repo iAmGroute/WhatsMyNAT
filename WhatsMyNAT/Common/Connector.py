@@ -26,12 +26,12 @@ class Connector:
 
     def recvfrom(self, bufferSize):
         data, addr = self.socket.recvfrom(bufferSize)
-        log.info(t('Received {0} Bytes from\t [{1}]:{2}'.format(prefixIEC(len(data)), *addr)))
+        self.log.info(t('Received {0} Bytes from\t [{1}]:{2}'.format(prefixIEC(len(data)), *addr)))
         return data, addr
 
     def sendto(self, data, endpoint):
         sentSize = self.socket.sendto(data, endpoint)
-        log.info(t('Sent {0} Bytes to\t [{1}]:{2}'.format(prefixIEC(sentSize), *endpoint)))
+        self.log.info(t('Sent {0} Bytes to\t [{1}]:{2}'.format(prefixIEC(sentSize), *endpoint)))
         return sentSize
 
     def listen(self):
@@ -40,14 +40,14 @@ class Connector:
 
     def accept(self):
         conn, addr = self.socket.accept()
-        log.info(t('Connection from\t [{0}]:{1}'.format(*addr)))
+        self.log.info(t('Connection from\t [{0}]:{1}'.format(*addr)))
         return conn, addr
 
     def recv(self, bufferSize):
         data = self.socket.recv(bufferSize)
-        log.info(t('Received {0} Bytes'.format(prefixIEC(len(data)))))
+        self.log.info(t('Received {0} Bytes'.format(prefixIEC(len(data)))))
         return data
 
     def connect(self, endpoint):
         self.socket.connect(endpoint)
-        log.info(t('Connected to\t [{0}]:{1}'.format(*endpoint)))
+        self.log.info(t('Connected to\t [{0}]:{1}'.format(*endpoint)))
