@@ -8,14 +8,14 @@ from WhatsMyNAT.ClientUDP import ClientUDP
 
 from serverList import servers
 
-def runTest(ClientClass, port, address):
+def runTest(clientClass, port, address):
 
     print('-------------- Server List --------------------------')
     print(' id |  port |                address                 ')
     print('----|-------|----------------------------------------')
     #     ' 35 | 12345 | a_very_long_url.somewhere.example.com'
 
-    with ClientClass(port, address) as client:
+    with clientClass(port, address) as client:
         externals = []
         for i in range(len(servers)):
             print(' {0:2d} | {1:5d} | {2}'.format(i, servers[i][1], servers[i][0]))
