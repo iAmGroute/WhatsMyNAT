@@ -1,7 +1,6 @@
 
 import sys
 import logging
-import socket
 
 from WhatsMyNAT.ServerTCP import ServerTCP
 from WhatsMyNAT.ServerUDP import ServerUDP
@@ -18,9 +17,6 @@ def main(serverClass, port, address, counterpart, endpointC):
         except KeyboardInterrupt:
             log.info('Exit requested by keyboard')
             break
-
-        # except socket.timeout:
-        #     pass
 
         except Exception as e:
             log.exception(e)
