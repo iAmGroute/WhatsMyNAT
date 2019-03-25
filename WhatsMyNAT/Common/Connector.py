@@ -25,6 +25,8 @@ class Connector:
         self.socket.close()
         self.log.info(t('Stopped'))
 
+    # Mainly UDP
+
     def recvfrom(self, bufferSize):
         data, addr = self.socket.recvfrom(bufferSize)
         self.log.info(t('Received {0}Bytes from\t [{1}]:{2}'.format(prefixIEC(len(data)), *addr)))
@@ -34,6 +36,8 @@ class Connector:
         sentSize = self.socket.sendto(data, endpoint)
         self.log.info(t('Sent     {0}Bytes to\t [{1}]:{2}'.format(prefixIEC(sentSize), *endpoint)))
         return sentSize
+
+    # Mainly TCP
 
     def listen(self):
         self.socket.listen()
@@ -52,3 +56,7 @@ class Connector:
     def connect(self, endpoint):
         self.socket.connect(endpoint)
         self.log.info(t('Connected to\t [{0}]:{1}'.format(*endpoint)))
+
+    def sendall(self, data):
+        self.socket.sendall(data)
+        self.log.info(t('Sent     {0}Bytes'.format(prefixIEC(len(data)))))

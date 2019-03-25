@@ -1,25 +1,21 @@
 
 import sys
 import logging
-import socket
 
-from WhatsMyNAT.CounterpartUDP import CounterpartUDP
+from WhatsMyNAT.Counterpart import Counterpart
 
 log = logging.getLogger(__name__)
 
 def main(port, address, probePort, probeAddress):
-    counterpartUDP = CounterpartUDP(port, address, probePort, probeAddress)
+    counterpart = Counterpart(port, address, probePort, probeAddress)
 
     while True:
         try:
-            counterpartUDP.task()
+            counterpart.task()
 
         except KeyboardInterrupt:
             log.info('Exit requested by keyboard')
             break
-
-        # except socket.timeout:
-        #     pass
 
         except Exception as e:
             log.exception(e)
@@ -49,6 +45,6 @@ if __name__ == '__main__':
     try:
         config = parseArgs(sys.argv)
     except Exception as e:
-        print('Usage: python3 counterpartUDP.py <port> [<nicAddress>] [<probePort>] [<probeAddress>]')
+        print('Usage: python3 counterpart.py <port> [<nicAddress>] [<probePort>] [<probeAddress>]')
     else:
         main(*config)
