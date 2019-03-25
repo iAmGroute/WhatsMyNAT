@@ -2,7 +2,7 @@
 import logging
 import socket
 
-from ..Common.Connector import Connector
+from .Common.Connector import Connector
 
 log  = logging.getLogger(__name__)
 logC = logging.getLogger(__name__ + ':C')

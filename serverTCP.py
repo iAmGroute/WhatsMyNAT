@@ -3,7 +3,7 @@ import sys
 import logging
 import socket
 
-from Servers.ServerTCP import ServerTCP
+from WhatsMyNAT.ServerTCP import ServerTCP
 
 log = logging.getLogger(__name__)
 

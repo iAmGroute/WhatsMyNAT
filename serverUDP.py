@@ -3,7 +3,7 @@ import sys
 import logging
 import socket
 
-from Servers.ServerUDP import ServerUDP
+from WhatsMyNAT.ServerUDP import ServerUDP
 
 log = logging.getLogger(__name__)
 

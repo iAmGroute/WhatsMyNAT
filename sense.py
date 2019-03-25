@@ -3,8 +3,8 @@ import sys
 import random
 
 from names import *
-from Clients.ClientTCP import ClientTCP
-from Clients.ClientUDP import ClientUDP
+from WhatsMyNAT.ClientTCP import ClientTCP
+from WhatsMyNAT.ClientUDP import ClientUDP
 
 from serverList import servers
 

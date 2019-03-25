@@ -3,7 +3,7 @@ import sys
 import logging
 import socket
 
-from Servers.CounterpartUDP import CounterpartUDP
+from WhatsMyNAT.CounterpartUDP import CounterpartUDP
 
 log = logging.getLogger(__name__)
 
