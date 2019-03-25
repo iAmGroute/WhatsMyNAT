@@ -2,8 +2,8 @@
 import logging
 import socket
 
-from Prefixes import prefixIEC
-from SmartTabs import t
+from .Prefixes import prefixIEC
+from .SmartTabs import t
 
 class Connector:
 
