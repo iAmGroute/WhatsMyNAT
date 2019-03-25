@@ -1,10 +1,11 @@
 
-import sys
 import logging
 import socket
 
+from ..Common.Connector import Connector
+
 log  = logging.getLogger(__name__)
-logP = logging.getLogger(__name__ + '.P')
+logP = logging.getLogger(__name__ + ':P')
 
 class CounterpartUDP:
 
@@ -26,51 +27,3 @@ class CounterpartUDP:
         log.info('    with token : {0}'.format(token))
         for _ in range(3):
             self.con.sendto(data, (remoteAddr, remotePort))
-
-
-def main(port, address, probePort, probeAddress):
-    logging.basicConfig(format='%(created).3f [cUDP.%(levelname)s] %(message)s', level=logging.INFO)
-
-    counterpartUDP = CounterpartUDP(port, address, probePort, probeAddress)
-
-    while True:
-        try:
-            counterpartUDP.task()
-
-        except KeyboardInterrupt:
-            log.info('Exit requested by keyboard')
-            break
-
-        # except socket.timeout:
-        #     pass
-
-        except Exception as e:
-            log.exception(e)
-
-
-def parseArgs(args):
-    port = int(args[1])
-    assert 0 < port < 65536
-
-    address = '0.0.0.0'
-    if len(args) > 2:
-        address = args[2]
-
-    probePort = 0
-    if len(args) > 3:
-        probePort = int(args[3])
-        assert 0 <= probePort < 65536
-
-    probeAddress = '0.0.0.0'
-    if len(args) > 4:
-        probeAddress = args[4]
-
-    return port, address, probePort, probeAddress
-
-if __name__ == '__main__':
-    try:
-        config = parseArgs(sys.argv)
-    except Exception as e:
-        print('Usage: python3 CounterpartUDP.py <port> [<nicAddress>] [<probePort>] [<probeAddress>]')
-    else:
-        main(*config)
