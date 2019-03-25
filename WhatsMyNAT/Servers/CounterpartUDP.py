@@ -3,35 +3,20 @@ import sys
 import logging
 import socket
 
-log = logging.getLogger(__name__)
+log  = logging.getLogger(__name__)
+logP = logging.getLogger(__name__ + '.P')
 
 class CounterpartUDP:
 
     def __init__(self, port, address='0.0.0.0', probePort=0, probeAddress='0.0.0.0'):
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        # s.settimeout(8)
-        s.bind((address, port))
-        self.socket = s
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        # s.settimeout(8)
-        s.bind((probeAddress, probePort))
-        self.socketP = s
-        log.info('Server started on [{0}]:{1}'.format(address, port))
-        log.info('    probing using [{0}]:{1}'.format(probeAddress, probePort))
-
-    def stop(self):
-        self.socket.shutdown(socket.SHUT_RDWR)
-        self.socket.close()
-        log.info('Server stopped')
+        self.con  = Connector(log, socket.SOCK_DGRAM, None, port, address)
+        self.conP = Connector(logP, socket.SOCK_DGRAM, None, probePort, probeAddress)
 
     def task(self):
-        data, addr = self.socket.recvfrom(1024)
-        log.info('Request from: [{0}]:{1}'.format(*addr))
+        data, addr = self.con.recvfrom(1024)
         try:
-            token = data[:16]
-            dest = data[16:].decode('utf-8').split('\n')
+            token      = data[:16]
+            dest       = data[16:].decode('utf-8').split('\n')
             remoteAddr = dest[0]
             remotePort = int(dest[1])
         except Exception as e:
@@ -40,7 +25,7 @@ class CounterpartUDP:
         log.info('    destination: [{0}]:{1}'.format(remoteAddr, remotePort))
         log.info('    with token : {0}'.format(token))
         for _ in range(3):
-            self.socket.sendto(data, (remoteAddr, remotePort))
+            self.con.sendto(data, (remoteAddr, remotePort))
 
 
 def main(port, address, probePort, probeAddress):

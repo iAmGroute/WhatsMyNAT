@@ -8,23 +8,12 @@ log = logging.getLogger(__name__)
 class ServerTCP:
 
     def __init__(self, port, address='0.0.0.0'):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        # s.settimeout(8)
-        s.bind((address, port))
-        s.listen()
-        self.socket = s
-        log.info('Server started on [{0}]:{1}'.format(address, port))
-
-    def stop(self):
-        self.socket.shutdown(socket.SHUT_RDWR)
-        self.socket.close()
-        log.info('Server stopped')
+        self.con = Connector(log, socket.SOCK_STREAM, None, port, address)
+        self.con.listen()
 
     def task(self):
-        conn, addr = self.socket.accept()
+        conn, addr = self.con.accept()
         with conn:
-            log.info('Connection from: [{0}]:{1}'.format(*addr))
             reply = '{0}\n{1}\n'.format(*addr)
             conn.sendall(bytes(reply, 'utf-8'))
 

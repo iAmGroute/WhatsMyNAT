@@ -3,66 +3,35 @@ import sys
 import logging
 import socket
 
-log = logging.getLogger(__name__)
+log  = logging.getLogger(__name__)
+logC = logging.getLogger(__name__ + '.C')
 
 class ServerUDP:
 
     def __init__(self, port, address='0.0.0.0', counterpart=None, endpointC=None):
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        # s.settimeout(8)
-        s.bind((address, port))
-        self.socket = s
         self.counterpart = counterpart
-        self.endpointC   = endpointC
-        self.socketC     = None
-        log.info('Server started on [{0}]:{1}'.format(address, port))
+        self.con         = Connector(log, socket.SOCK_DGRAM, None, port, address)
+        self.conC        = None
         if counterpart:
             log.info('    with counterpart [{0}]:{1}'.format(*counterpart))
             if endpointC:
                 log.info('    using [{0}]:{1}'.format(*endpointC))
-            self.startC()
-        # elif endpointC:
-        #     self.startC()
-        #     self.socketC.listen()
-        #     log.info('    listening for counterpart on [{0}]:{1}'.format(*endpointC))
-
-    def startC(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.settimeout(2)
-        s.bind(self.endpointC if self.endpointC else (self.address, 0))
-        self.socketC = s
-        log.info('Starting counterpart socket')
-
-    def stopC(self):
-        s = self.socketC
-        if s:
-            s.shutdown(socket.SHUT_RDWR)
-            s.close()
-        self.socketC = None
-        log.info('Stopping counterpart socket')
-
-    def stop(self):
-        self.stopC()
-        self.socket.shutdown(socket.SHUT_RDWR)
-        self.socket.close()
-        log.info('Server stopped')
+            self.conC = Connector(logC, socket.SOCK_DGRAM, 2,
+                                  *(endpointC if endpointC else (self.address, 0)))
 
     def task(self):
-        data, addr = self.socket.recvfrom(64)
-        log.info('Connection from: [{0}]:{1}'.format(*addr))
+        data, addr = self.con.recvfrom(64)
         reply = '{0}\n{1}\n'.format(*addr)
         if len(data) == 16:
             # Received token for reverse testing
             log.info('    with token : {0}'.format(data))
-            if self.socketC:
+            if self.conC:
                 for _ in range(3):
-                    self.socketC.sendto(data + bytes(reply, 'utf-8'), self.counterpart)
+                    self.conC.sendto(data + bytes(reply, 'utf-8'), self.counterpart)
             # TODO: append counterpart's probing address and port
             #reply +=
         for _ in range(3):
-            self.socket.sendto(bytes(reply, 'utf-8'), addr)
+            self.con.sendto(bytes(reply, 'utf-8'), addr)
 
 
 def main(port, address, counterpart, endpointC):
