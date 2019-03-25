@@ -2,6 +2,9 @@
 import logging
 import socket
 
+from Prefixes import prefixIEC
+from SmartTabs import t
+
 class Connector:
 
     def __init__(self, log=None, socketType=socket.SOCK_DGRAM, timeout=None, port=0, address='0.0.0.0'):
@@ -11,33 +14,37 @@ class Connector:
         s.settimeout(timeout)
         s.bind((address, port))
         self.socket = s
-        self.log.info('Started on: [{0}]:{1}'.format(address, port))
+        self.log.info(t('Started on\t [{0}]:{1}'.format(address, port)))
 
     def __del__(self):
         self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
-        self.log.info('Stopped')
+        self.log.info(t('Stopped'))
 
     def recvfrom(self, bufferSize):
         data, addr = self.socket.recvfrom(bufferSize)
-        log.info('Data from: [{0}]:{1}'.format(*addr))
+        log.info(t('Received {0} Bytes from\t [{1}]:{2}'.format(prefixIEC(len(data)), *addr)))
         return data, addr
 
     def sendto(self, data, endpoint):
         sentSize = self.socket.sendto(data, endpoint)
+        log.info(t('Sent {0} Bytes to\t [{1}]:{2}'.format(prefixIEC(sentSize), *endpoint)))
         return sentSize
 
     def listen(self):
         self.socket.listen()
+        self.log.info(t('Listening'))
 
     def accept(self):
         conn, addr = self.socket.accept()
-        log.info('Connection from: [{0}]:{1}'.format(*addr))
+        log.info(t('Connection from\t [{0}]:{1}'.format(*addr)))
         return conn, addr
 
     def recv(self, bufferSize):
         data = self.socket.recv(bufferSize)
+        log.info(t('Received {0} Bytes'.format(prefixIEC(len(data)))))
         return data
 
     def connect(self, endpoint):
         self.socket.connect(endpoint)
+        log.info(t('Connected to\t [{0}]:{1}'.format(*endpoint)))
