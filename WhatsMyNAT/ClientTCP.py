@@ -44,13 +44,16 @@ class ClientTCP:
 
         try:
             self.con.sendall(token)
-            # data = self.con.recv(1024)
-            # reply = parseReply(data, token)
+            data = self.con.recv(1024)
+            addr = self.con.socket.getpeername()
+            reply = parseReply(data, token)
+            if reply:
+                replies.append((reply, addr))
         except socket.timeout:
             pass
 
         try:
-            for _ in range(3):
+            for _ in range(2):
                 conn, addr = self.conL.accept()
                 with conn:
                     conn.settimeout(2)
