@@ -15,13 +15,23 @@ def runTest(clientClass, port, address):
     print('----|-------|----------------------------------------')
     #     ' 35 | 12345 | a_very_long_url.somewhere.example.com.  OK'
 
-    externals = []
+    results = []
     for i in range(len(servers)):
-        print(' {0:2d} | {1:5d} | {2:38}  '.format(i, servers[i][1], servers[i][0]), end='')
-        with clientClass(port, address) as client:
-            ext = client.getAddressFrom(*servers[i])
-        print('OK' if ext else 'ERROR')
-        externals.append(ext)
+        dAddress, dPorts = servers[i]
+
+        replies = []
+        for j in range(len(dPorts)):
+            dPort = dPorts[j]
+
+            print(' {0:2d} | {1:5d} | {2:38}  '.format(i, dPort, dAddress), end='')
+
+            with clientClass(port, address) as client:
+                reply = client.getAddressFrom(dAddress, dPort)
+
+            print('OK' if reply else 'ERROR')
+            replies.append(reply)
+
+        results.append(replies)
 
     print('---------------- Results ----------------------------')
     print('  Server    |       our Port       |   our Address   ')
@@ -29,25 +39,57 @@ def runTest(clientClass, port, address):
     print('----|-------|----------->----------|-----------------')
     #     ' 35 | 12345 |    22222 -> 54321    | 123.123.123.123 '
     for i in range(len(servers)):
-        ext = externals[i]
-        print(' {0:2d} | {1:5d} |    {2:5d} -> {3:5d}    | {4:15} '.format(
-            i, servers[i][1], port,
-            ext[1] if ext else 0,
-            ext[0] if ext else 'N/A'
-        ))
+        dAddress, dPorts = servers[i]
+        replies          = results[i]
+        for j in range(len(dPorts)):
+            dPort = dPorts[j]
+            reply = replies[j] if replies[j] else ('N/A', 0)
+            print(' {0:2d} | {1:5d} |    {2:5d} -> {3:5d}    | {4:15} '.format(i, dPort, port, reply[1], reply[0]))
+
+    print('----------- Summaries ------------')
+    print(' Server |    our External         ')
+    print(' id | # |  port | address         ')
+    #     ' 35 | 4 | 12345 | 123.123.123.123 '
+    summaries = []
+    for i in range(len(results)):
+        replies = results[i]
+        common = None
+        count  = 0
+        for reply in replies:
+            if reply:
+                count += 1
+                if not common:
+                    common = reply
+                    continue
+                if reply[0] != common[0]:
+                    common[0] = 'N/A'
+                if reply[1] != common[1]:
+                    common[1] = 0
+        summaries.append((count, common))
+        if common:
+            print(' {0:2d} | {1:1d} | {2:5d} | {3:15} '.format(i, count, common[1], common[0]))
 
     sense = Sensitivity.undetermined
-    s1p1 = externals[0]
-    s1p2 = externals[1]
-    s2p1 = externals[2]
-    if s1p1 == s1p2 == s2p1:
+    globalCommon = None
+    portConclusive = False
+    addrConclusive = False
+    for count, common in summaries:
+        if count:
+            if count > 2:
+                portConclusive = True
+
+            if common[0] == 'N/A' or common[1] == 0:
+                sense = Sensitivity.portSensitive
+                break
+
+            if not globalCommon:
+                globalCommon = common
+            else:
+                addrConclusive = True
+                if common != globalCommon:
+                    sense = Sensitivity.ipSensitive
+    if not (portConclusive and addrConclusive):
         sense = Sensitivity.insensitive
-    elif s1p1 == s1p2:
-        sense = Sensitivity.ipSensitive
-    else:
-        # There is no way to differentiate between portRestricted
-        # and symmetric without action from the server.
-        sense = Sensitivity.portSensitive
 
     return sense
 
@@ -59,8 +101,8 @@ def main(portTCP, portUDP, address):
     print('Running UDP sensitivity test')
     senseUDP = runTest(ClientUDP, portUDP, address)
     print()
-    print('TCP sensitivity: ' + senseTCP.name)
-    print('UDP sensitivity: ' + senseUDP.name)
+    print('TCP sensitivity: ' + str(senseTCP))
+    print('UDP sensitivity: ' + str(senseUDP))
 
 
 def parseArgs(args):
