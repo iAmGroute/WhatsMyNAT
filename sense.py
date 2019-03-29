@@ -13,13 +13,14 @@ def runTest(clientClass, port, address):
     print('-------------- Server List --------------------------')
     print(' id |  port |                address                 ')
     print('----|-------|----------------------------------------')
-    #     ' 35 | 12345 | a_very_long_url.somewhere.example.com'
+    #     ' 35 | 12345 | a_very_long_url.somewhere.example.com.  OK'
 
     externals = []
     for i in range(len(servers)):
-        print(' {0:2d} | {1:5d} | {2}'.format(i, servers[i][1], servers[i][0]))
+        print(' {0:2d} | {1:5d} | {2:38}  '.format(i, servers[i][1], servers[i][0]), end='')
         with clientClass(port, address) as client:
             ext = client.getAddressFrom(*servers[i])
+        print('OK' if ext else 'ERROR')
         externals.append(ext)
 
     print('---------------- Results ----------------------------')
@@ -28,7 +29,12 @@ def runTest(clientClass, port, address):
     print('----|-------|----------->----------|-----------------')
     #     ' 35 | 12345 |    22222 -> 54321    | 123.123.123.123 '
     for i in range(len(servers)):
-        print(' {0:2d} | {1:5d} |    {2:5d} -> {3:5d}    | {4}'.format(i, servers[i][1], port, externals[i][1], externals[i][0]))
+        ext = externals[i]
+        print(' {0:2d} | {1:5d} |    {2:5d} -> {3:5d}    | {4:15} '.format(
+            i, servers[i][1], port,
+            ext[1] if ext else 0,
+            ext[0] if ext else 'N/A'
+        ))
 
     sense = Sensitivity.undetermined
     s1p1 = externals[0]
