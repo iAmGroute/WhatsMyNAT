@@ -127,6 +127,6 @@ if __name__ == '__main__':
     try:
         config = parseArgs(sys.argv)
     except Exception as e:
-        print('Usage: python3 mainTCP.py [<localPortTCP>] [<localPortUDP>] [<nicAddress>]')
+        print('Usage: python3 sense.py [<localPortTCP>] [<localPortUDP>] [<nicAddress>]')
     else:
         main(*config)
