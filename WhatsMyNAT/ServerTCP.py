@@ -28,6 +28,8 @@ class ServerTCP:
 
     def task(self):
         conn, addr = self.con.accept()
+        data = None
+
         with conn:
             conn.settimeout(0.2)
             try:
@@ -46,21 +48,23 @@ class ServerTCP:
                     # Primary reply
                     conn.sendall(data)
 
-                    if data[0] == b'T'[0]:
-                        # Same port reply
-                        try:
-                            with Connector(logP, socket.SOCK_STREAM, 2, self.port, self.address) as conP:
-                                conP.connect(addr)
-                                conP.sendall(data)
-                        except Exception:
-                            pass
-                        # Different port reply
-                        try:
-                            with Connector(logP, socket.SOCK_STREAM, 2, self.probePort, self.address) as conP:
-                                conP.connect(addr)
-                                conP.sendall(data)
-                        except Exception:
-                            pass
-                        # Different ip reply request from counterpart
-                        if self.conC:
-                            self.conC.sendto(data, self.counterpart)
+        if data and data[0] == b'T'[0]:
+            # Same port reply
+            try:
+                with Connector(logP, socket.SOCK_STREAM, 2, self.port, self.address) as conP:
+                    conP.connect(addr)
+                    conP.sendall(data)
+            except Exception as e:
+                logP.exception(e)
+                pass
+            # Different port reply
+            try:
+                with Connector(logP, socket.SOCK_STREAM, 2, self.probePort, self.address) as conP:
+                    conP.connect(addr)
+                    conP.sendall(data)
+            except Exception as e:
+                logP.exception(e)
+                pass
+            # Different ip reply request from counterpart
+            if self.conC:
+                self.conC.sendto(data, self.counterpart)
