@@ -121,5 +121,5 @@ dmypy.json
 /startServers.sh
 /kill.sh
 
-# Nohup output
-nohup.out
+# Log output
+*.out
