@@ -38,7 +38,7 @@ class ClientTCP:
         token = b'T' + os.urandom(15)
         try:
             self.con.connect((serverAddr, serverPort))
-        except socket.timeout:
+        except (socket.timeout, ConnectionError):
             log.warn('Couldn\'t connect to [{0}]:{1}'.format(address, port))
             return None
 
