@@ -27,7 +27,7 @@ class ServerUDP:
         data, addr = self.con.recvfrom(64)
         if len(data) == 16:
             # Received token for testing
-            log.info('    with token : {0}'.format(data))
+            log.info('    with token : {0}'.format(data.hex()))
 
             data += bytes('{0}\n{1}\n'.format(*addr), 'utf-8')
             # TODO: append counterpart's probing address and port
