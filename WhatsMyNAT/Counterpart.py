@@ -25,7 +25,7 @@ class Counterpart:
             log.exception(e)
             return
         log.info('    destination: [{0}]:{1}'.format(remoteAddr, remotePort))
-        log.info('    with token : {0}'.format(token))
+        log.info('    with token: x{0}'.format(token.hex()))
 
         if token[0] == b'T'[0]:
             try:
