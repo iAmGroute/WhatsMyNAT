@@ -4,7 +4,7 @@ import socket
 
 from .Common.Connector import Connector
 
-log   = logging.getLogger(__name__)
+log   = logging.getLogger(__name__ + '   ')
 logPT = logging.getLogger(__name__ + ':PT')
 logPU = logging.getLogger(__name__ + ':PU')
 
@@ -27,14 +27,14 @@ class Counterpart:
         log.info('    destination: [{0}]:{1}'.format(remoteAddr, remotePort))
         log.info('    with token : {0}'.format(token))
 
-        if token[0] == b'T':
+        if token[0] == b'T'[0]:
             try:
                 with Connector(logPT, socket.SOCK_STREAM, 2, probePort, probeAddress) as conPT:
                     conPT.connect((remoteAddr, remotePort))
                     conPT.sendall(data)
-            except Exception:
+            except:
                 pass
-        elif token[0] == b'U':
+        elif token[0] == b'U'[0]:
             for _ in range(3):
                 self.conPU.sendto(data, (remoteAddr, remotePort))
         else:
