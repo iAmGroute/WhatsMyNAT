@@ -88,8 +88,9 @@ def runTest(clientClass, port, address):
                 addrConclusive = True
                 if common != globalCommon:
                     sense = Sensitivity.ipSensitive
+
     if not (portConclusive and addrConclusive):
-        sense = Sensitivity.insensitive
+        sense = Sensitivity.undetermined
 
     return sense
 
