@@ -12,8 +12,9 @@ class SmartTabs:
         for a in range(0, min(len(cells), len(cols))):
             padding = cols[a] - len(cells[a])
             if padding > 0:
-                cols[a]  += padding
                 cells[a] += ' ' * padding
+            else:
+                cols[a]  += -padding
 
         # Add new columns if needed
         for b in range(a + 1, len(cells)):
