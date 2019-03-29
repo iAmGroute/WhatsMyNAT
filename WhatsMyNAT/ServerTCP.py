@@ -15,8 +15,6 @@ class ServerTCP:
         self.address     = address
         self.probePort   = probePort
         self.counterpart = counterpart
-        self.con         = Connector(log, socket.SOCK_STREAM, None, port, address)
-        self.con.listen()
         self.conC        = None
         if counterpart:
             log.info('    with counterpart [{0}]:{1}'.format(*counterpart))
@@ -27,26 +25,27 @@ class ServerTCP:
                 self.conC = Connector(logC, socket.SOCK_DGRAM, 2, 0, address)
 
     def task(self):
-        conn, addr = self.con.accept()
         data = None
+        with Connector(log, socket.SOCK_STREAM, None, self.port, self.address) as con:
+            con.listen()
+            conn, addr = con.accept()
+            with conn:
+                conn.settimeout(0.2)
+                try:
+                    data = conn.recv(64)
+                except socket.timeout:
+                    pass
+                else:
+                    if len(data) == 16:
+                        # Received token for testing
+                        log.info('    with token: x{0}'.format(data.hex()))
 
-        with conn:
-            conn.settimeout(0.2)
-            try:
-                data = conn.recv(64)
-            except socket.timeout:
-                pass
-            else:
-                if len(data) == 16:
-                    # Received token for testing
-                    log.info('    with token: x{0}'.format(data.hex()))
+                        data += bytes('{0}\n{1}\n'.format(*addr), 'utf-8')
+                        # TODO: append counterpart's probing address and port
+                        #data +=
 
-                    data += bytes('{0}\n{1}\n'.format(*addr), 'utf-8')
-                    # TODO: append counterpart's probing address and port
-                    #data +=
-
-                    # Primary reply
-                    conn.sendall(data)
+                        # Primary reply
+                        conn.sendall(data)
 
         if data and data[0] == b'T'[0]:
             # Same port reply
