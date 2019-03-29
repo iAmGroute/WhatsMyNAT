@@ -69,13 +69,13 @@ def runTest(clientClass, port, address):
         if common:
             print(' {0:2d} | {1:1d} | {2:5d} | {3:15} '.format(i, count, common[1], common[0]))
 
-    sense = Sensitivity.undetermined
+    sense = Sensitivity.insensitive
     globalCommon = None
     portConclusive = False
     addrConclusive = False
     for count, common in summaries:
         if count:
-            if count > 2:
+            if count > 1:
                 portConclusive = True
 
             if common[0] == 'N/A' or common[1] == 0:
