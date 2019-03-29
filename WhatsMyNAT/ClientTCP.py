@@ -30,7 +30,7 @@ class ClientTCP:
             data = self.con.recv(1024)
             reply = parseReply(data, token)
             return reply
-        except socket.timeout:
+        except (socket.timeout, ConnectionError):
             return None
 
     def getRepliesFrom(self, serverAddr, serverPort):
