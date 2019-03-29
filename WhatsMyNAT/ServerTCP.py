@@ -11,6 +11,9 @@ logC = logging.getLogger(__name__ + ':C')
 class ServerTCP:
 
     def __init__(self, port, address='0.0.0.0', probePort=0, counterpart=None, endpointC=None):
+        self.port        = port
+        self.address     = address
+        self.probePort   = probePort
         self.counterpart = counterpart
         self.con         = Connector(log, socket.SOCK_STREAM, None, port, address)
         self.con.listen()
@@ -21,7 +24,7 @@ class ServerTCP:
                 log.info('    using [{0}]:{1}'.format(*endpointC))
                 self.conC = Connector(logC, socket.SOCK_DGRAM, 2, endpointC[1], endpointC[0])
             else:
-                self.conC = Connector(logC, socket.SOCK_DGRAM, 2, 0, self.address)
+                self.conC = Connector(logC, socket.SOCK_DGRAM, 2, 0, address)
 
     def task(self):
         conn, addr = self.con.accept()
@@ -44,13 +47,20 @@ class ServerTCP:
                     conn.sendall(data)
 
                     if data[0] == b'T'[0]:
+                        # Same port reply
+                        try:
+                            with Connector(logP, socket.SOCK_STREAM, 2, self.port, self.address) as conP:
+                                conP.connect(addr)
+                                conP.sendall(data)
+                        except Exception:
+                            pass
                         # Different port reply
                         try:
-                            with Connector(logP, socket.SOCK_STREAM, 2, probePort, address) as conP:
+                            with Connector(logP, socket.SOCK_STREAM, 2, self.probePort, self.address) as conP:
                                 conP.connect(addr)
                                 conP.sendall(data)
                         except Exception:
                             pass
                         # Different ip reply request from counterpart
                         if self.conC:
-                            self.conC.sendto(data + bytes(reply, 'utf-8'), self.counterpart)
+                            self.conC.sendto(data, self.counterpart)
