@@ -15,6 +15,8 @@ class ServerTCP:
         self.address     = address
         self.probePort   = probePort
         self.counterpart = counterpart
+        self.con         = Connector(log, socket.SOCK_STREAM, None, port, address)
+        self.con.listen()
         self.conC        = None
         if counterpart:
             log.info('    with counterpart [{0}]:{1}'.format(*counterpart))
@@ -25,45 +27,33 @@ class ServerTCP:
                 self.conC = Connector(logC, socket.SOCK_DGRAM, 2, 0, address)
 
     def task(self):
-        data = None
-        with Connector(log, socket.SOCK_STREAM, None, self.port, self.address) as con:
-            con.listen()
-            conn, addr = con.accept()
-            with conn:
-                conn.settimeout(0.2)
-                try:
-                    data = conn.recv(64)
-                except socket.timeout:
-                    pass
-                else:
-                    if len(data) == 16:
-                        # Received token for testing
-                        log.info('    with token: x{0}'.format(data.hex()))
-
-                        data += bytes('{0}\n{1}\n'.format(*addr), 'utf-8')
-                        # TODO: append counterpart's probing address and port
-                        #data +=
-
-                        # Primary reply
-                        conn.sendall(data)
-
-        if data and data[0] == b'T'[0]:
-            # Same port reply
+        conn, addr = self.con.accept()
+        with conn:
+            conn.settimeout(0.2)
             try:
-                with Connector(logP, socket.SOCK_STREAM, 2, self.port, self.address) as conP:
-                    conP.connect(addr)
-                    conP.sendall(data)
-            except Exception as e:
-                logP.exception(e)
+                data = conn.recv(64)
+            except socket.timeout:
                 pass
-            # Different port reply
-            try:
-                with Connector(logP, socket.SOCK_STREAM, 2, self.probePort, self.address) as conP:
-                    conP.connect(addr)
-                    conP.sendall(data)
-            except Exception as e:
-                logP.exception(e)
-                pass
-            # Different ip reply request from counterpart
-            if self.conC:
-                self.conC.sendto(data, self.counterpart)
+            else:
+                if len(data) == 16:
+                    # Received token for testing
+                    log.info('    with token: x{0}'.format(data.hex()))
+
+                    data += bytes('{0}\n{1}\n'.format(*addr), 'utf-8')
+                    # TODO: append counterpart's probing address and port
+                    #data +=
+
+                    # Primary reply
+                    conn.sendall(data)
+
+                    if data[0] == b'T'[0]:
+                        # Different port reply
+                        try:
+                            with Connector(logP, socket.SOCK_STREAM, 2, self.probePort, self.address) as conP:
+                                conP.connect(addr)
+                                conP.sendall(data)
+                        except (socket.timeout, ConnectionError):
+                            pass
+                        # Different ip reply request from counterpart
+                        if self.conC:
+                            self.conC.sendto(data, self.counterpart)
