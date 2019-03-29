@@ -10,8 +10,10 @@ class SmartTabs:
 
         # Pad as needed or update existing columns
         for a in range(0, min(len(cells), len(cols))):
-            cols[a]   = max(cols[a], len(cells[a]))
-            cells[a] += ' ' * (cols[a] - len(cells[a]))
+            padding = cols[a] - len(cells[a])
+            if padding > 0:
+                cols[a]  += padding
+                cells[a] += ' ' * padding
 
         # Add new columns if needed
         for b in range(a + 1, len(cells)):
