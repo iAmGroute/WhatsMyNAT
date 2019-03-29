@@ -17,13 +17,15 @@ class ClientTCP:
     def __exit__(self, type=None, value=None, traceback=None):
         self.con.__exit__()
 
-    def getAddressFrom(self, serverAddr, serverPort):
-        self.con.connect((serverAddr, serverPort))
-        reply = self.con.recv(1024)
-
-        log.info('    reply: {0}'.format(reply))
-
+    @staticmethod
+    def parseReply(reply):
+        log.info('    content: {0}'.format(reply))
         reply = reply.decode('utf-8').split('\n')
         externalAddr = reply[0]
         externalPort = int(reply[1])
         return externalAddr, externalPort
+
+    def getAddressFrom(self, serverAddr, serverPort):
+        self.con.connect((serverAddr, serverPort))
+        reply = self.con.recv(1024)
+        return self.parseReply(reply)
