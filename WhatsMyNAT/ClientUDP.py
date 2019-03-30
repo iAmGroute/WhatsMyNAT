@@ -26,9 +26,15 @@ class ClientUDP:
             self.con.sendto(token, (serverAddr, serverPort))
             reply = None
             try:
+                i = 0
                 while not reply:
                     data, addr = self.con.recvfrom(1024)
                     reply = parseReply(data, token)
+                    i += 1
+                # Discard redundant replies
+                while i < 3:
+                    self.con.recvfrom(1024)
+                    i += 1
             except socket.timeout:
                 pass
         except socket.error as e:
