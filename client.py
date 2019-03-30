@@ -9,9 +9,13 @@ log = logging.getLogger(__name__)
 
 def main(clientClass, serverAddr, serverPort, port, address):
     with clientClass(port, address) as client:
-        externalAddr, externalPort = client.getAddressFrom(serverAddr, serverPort)
+        reply = client.getAddressFrom(serverAddr, serverPort)
 
-    log.info('External address and port: [{0}]:{1}'.format(externalAddr, externalPort))
+    if reply:
+        externalAddr, externalPort = reply
+        log.info('External address and port: [{0}]:{1}'.format(externalAddr, externalPort))
+    else:
+        log.error('No reply received or it was invalid')
 
 
 def parseArgs(args):
