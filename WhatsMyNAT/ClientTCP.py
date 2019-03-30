@@ -30,7 +30,7 @@ class ClientTCP:
             data = self.con.recv(1024)
             reply = parseReply(data, token)
             return reply
-        except (socket.timeout, ConnectionError):
+        except (socket.error, ConnectionError):
             return None
 
     def getRepliesFrom(self, serverAddr, serverPort):
@@ -38,7 +38,7 @@ class ClientTCP:
         token = b'T' + os.urandom(15)
         try:
             self.con.connect((serverAddr, serverPort))
-        except (socket.timeout, ConnectionError):
+        except (socket.error, ConnectionError):
             log.warn('Couldn\'t connect to [{0}]:{1}'.format(address, port))
             return None
 
@@ -49,7 +49,7 @@ class ClientTCP:
             reply = parseReply(data, token)
             if reply:
                 replies.append((reply, addr))
-        except socket.timeout:
+        except socket.error:
             pass
 
         try:
@@ -61,7 +61,7 @@ class ClientTCP:
                     reply = parseReply(data, token)
                     if reply:
                         replies.append((reply, addr))
-        except socket.timeout:
+        except socket.error:
             pass
 
         return replies

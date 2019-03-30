@@ -32,7 +32,7 @@ class ServerTCP:
             conn.settimeout(0.2)
             try:
                 data = conn.recv(64)
-            except socket.timeout:
+            except socket.error:
                 pass
             else:
                 if len(data) == 16:
@@ -52,7 +52,7 @@ class ServerTCP:
                             try:
                                 conP.connect(addr)
                                 conP.sendall(data)
-                            except (socket.timeout, ConnectionError) as e:
+                            except (socket.error, ConnectionError) as e:
                                 logP.exception(e)
                                 pass
                         # Different ip reply request from counterpart

@@ -26,7 +26,7 @@ class ClientUDP:
             data, addr = self.con.recvfrom(1024)
             reply = parseReply(data, token)
             return reply
-        except socket.timeout:
+        except socket.error:
             return None
 
     def getRepliesFrom(self, serverAddr, serverPort):
@@ -39,6 +39,6 @@ class ClientUDP:
                 reply = parseReply(data, token)
                 if reply:
                     replies.append((reply, addr))
-        except socket.timeout:
+        except socket.error:
             pass
         return replies
