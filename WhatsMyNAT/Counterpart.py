@@ -30,7 +30,7 @@ class Counterpart:
         log.info('    destination: [{0}]:{1}'.format(remoteAddr, remotePort))
 
         if token[0] == b'T'[0]:
-            with Connector(logPT, socket.SOCK_STREAM, 2, probePort, probeAddress) as conPT:
+            with Connector(logPT, socket.SOCK_STREAM, 2, self.probePort, self.probeAddress) as conPT:
                 try:
                     conPT.connect((remoteAddr, remotePort))
                     conPT.sendall(data)
