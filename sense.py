@@ -39,23 +39,20 @@ def runTest(clientClass, port, address):
     print('----|-------|----------->----------|-----------------')
     #     ' 35 | 12345 |    22222 -> 54321    | 123.123.123.123 '
     for i in range(len(servers)):
-        dAddress, dPorts = servers[i]
-        replies          = results[i]
-        for j in range(len(dPorts)):
-            dPort = dPorts[j]
-            reply = replies[j] if replies[j] else ('N/A', 0)
-            print(' {0:2d} | {1:5d} |    {2:5d} -> {3:5d}    | {4:15} '.format(i, dPort, port, reply[1], reply[0]))
+        for j in range(len(servers[i][1])):
+            reply = results[i][j] if results[i][j] else ('N/A', 0)
+            print(' {0:2d} | {1:5d} |    {2:5d} -> {3:5d}    | {4:15} '.format(i, servers[i][1][j], port, reply[1], reply[0]))
 
     print('----------- Summaries ------------')
     print(' Server |    our External         ')
     print(' id | # |  port | address         ')
+    print('----|---|-------|-----------------')
     #     ' 35 | 4 | 12345 | 123.123.123.123 '
     summaries = []
     for i in range(len(results)):
-        replies = results[i]
         common = None
         count  = 0
-        for reply in replies:
+        for reply in results[i]:
             if reply:
                 count += 1
                 if not common:
