@@ -21,8 +21,8 @@ class ClientUDP:
 
     def getAddressFrom(self, serverAddr, serverPort):
         token = b'0' + os.urandom(15)
-        self.con.sendto(token, (serverAddr, serverPort))
         try:
+            self.con.sendto(token, (serverAddr, serverPort))
             data, addr = self.con.recvfrom(1024)
             reply = parseReply(data, token)
             return reply
@@ -32,8 +32,8 @@ class ClientUDP:
     def getRepliesFrom(self, serverAddr, serverPort):
         replies = []
         token = b'U' + os.urandom(15)
-        self.con.sendto(token, (serverAddr, serverPort))
         try:
+            self.con.sendto(token, (serverAddr, serverPort))
             while len(replies) < 9:
                 data, addr = self.con.recvfrom(1024)
                 reply = parseReply(data, token)
