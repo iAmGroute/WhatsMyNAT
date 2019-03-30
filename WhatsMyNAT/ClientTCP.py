@@ -30,7 +30,8 @@ class ClientTCP:
             data = self.con.recv(1024)
             reply = parseReply(data, token)
             return reply
-        except (socket.error, ConnectionError):
+        except (socket.error, ConnectionError) as e:
+            log.warn(e)
             return None
 
     def getRepliesFrom(self, serverAddr, serverPort):
@@ -39,7 +40,7 @@ class ClientTCP:
         try:
             self.con.connect((serverAddr, serverPort))
         except (socket.error, ConnectionError):
-            log.warn('Couldn\'t connect to [{0}]:{1}'.format(address, port))
+            log.error('Couldn\'t connect to [{0}]:{1}'.format(address, port))
             return None
 
         try:
@@ -49,7 +50,8 @@ class ClientTCP:
             reply = parseReply(data, token)
             if reply:
                 replies.append((reply, addr))
-        except socket.error:
+        except socket.error as e:
+            log.warn(e)
             pass
 
         try:
@@ -61,7 +63,8 @@ class ClientTCP:
                     reply = parseReply(data, token)
                     if reply:
                         replies.append((reply, addr))
-        except socket.error:
+        except socket.error as e:
+            log.warn(e)
             pass
 
         return replies

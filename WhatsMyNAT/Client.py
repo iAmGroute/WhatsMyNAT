@@ -1,4 +1,8 @@
 
+import logging
+
+log = logging.getLogger(__name__)
+
 def parseReply(reply, token):
     try:
         rtoken       = reply[:16]
@@ -7,5 +11,6 @@ def parseReply(reply, token):
         externalAddr = external[0]
         externalPort = int(external[1])
         return externalAddr, externalPort
-    except:
+    except Exception as e:
+        log.exception(e)
         return None

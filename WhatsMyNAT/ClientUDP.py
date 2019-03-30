@@ -20,14 +20,20 @@ class ClientUDP:
         self.con.__exit__()
 
     def getAddressFrom(self, serverAddr, serverPort):
+        reply = None
         token = b'0' + os.urandom(15)
         try:
             self.con.sendto(token, (serverAddr, serverPort))
-            data, addr = self.con.recvfrom(1024)
-            reply = parseReply(data, token)
-            return reply
-        except socket.error:
-            return None
+            reply = None
+            try:
+                while not reply;
+                    data, addr = self.con.recvfrom(1024)
+                    reply = parseReply(data, token)
+            except socket.timeout:
+                pass
+        except socket.error as e:
+            log.warn(e)
+        return reply
 
     def getRepliesFrom(self, serverAddr, serverPort):
         replies = []
@@ -39,6 +45,7 @@ class ClientUDP:
                 reply = parseReply(data, token)
                 if reply:
                     replies.append((reply, addr))
-        except socket.error:
+        except socket.error as e:
+            log.warn(e)
             pass
         return replies
