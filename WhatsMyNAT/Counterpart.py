@@ -34,7 +34,8 @@ class Counterpart:
                 try:
                     conPT.connect((remoteAddr, remotePort))
                     conPT.sendall(data)
-                except (socket.timeout, ConnectionError):
+                except (socket.timeout, ConnectionError) as e:
+                    logPT.exceptiton(e)
                     pass
         elif token[0] == b'U'[0]:
             for _ in range(3):

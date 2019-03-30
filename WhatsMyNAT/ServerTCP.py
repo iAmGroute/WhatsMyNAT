@@ -48,12 +48,13 @@ class ServerTCP:
 
                     if data[0] == b'T'[0]:
                         # Different port reply
-                        try:
-                            with Connector(logP, socket.SOCK_STREAM, 2, self.probePort, self.address) as conP:
+                        with Connector(logP, socket.SOCK_STREAM, 2, self.probePort, self.address) as conP:
+                            try:
                                 conP.connect(addr)
                                 conP.sendall(data)
-                        except (socket.timeout, ConnectionError):
-                            pass
+                            except (socket.timeout, ConnectionError) as e:
+                                logP.exception(e)
+                                pass
                         # Different ip reply request from counterpart
                         if self.conC:
                             self.conC.sendto(data, self.counterpart)
