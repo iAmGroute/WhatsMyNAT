@@ -59,9 +59,11 @@ def runTest(clientClass, port, address):
             summaries.append(uc)
             print(' {0:2d} | {1:5d} |    {2:1d}'.format(i, servers[i][1][j], uc))
 
-    temp = Counter(summaries)
+    temp  = Counter(summaries)
+    total = len(summaries) - temp[0]
+    temp.subtract([0])
     uc, frequency = temp.most_common(1)[0]
-    frequency = 100 * frequency / (len(summaries) - temp[0])
+    frequency = 100 * frequency / total
 
     if uc >= 3:
         restrict = Restrictiveness.permissive
