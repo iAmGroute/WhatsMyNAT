@@ -26,7 +26,7 @@ class ClientUDP:
             self.con.sendto(token, (serverAddr, serverPort))
             reply = None
             try:
-                while not reply;
+                while not reply:
                     data, addr = self.con.recvfrom(1024)
                     reply = parseReply(data, token)
             except socket.timeout:
