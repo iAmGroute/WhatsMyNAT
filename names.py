@@ -5,7 +5,7 @@ class EnumNAT(Enum):
     def __str__(self):
         return self.value[1]
 
-class Permissiveness(EnumNAT):
+class Restrictiveness(EnumNAT):
     undetermined   = (-1, 'Undetermined')
     permissive     = ( 0, 'Permissive')
     ipRestricted   = ( 1, 'IP restricted')
