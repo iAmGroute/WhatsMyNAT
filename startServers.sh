@@ -4,7 +4,7 @@
 PORTS_UDP=( {1260..1263} )
 
 # TCP Ports to listen on
-PORTS_UDP=( {1260..1263} )
+PORTS_TCP=( {1260..1263} )
 
 # UDP port for counterpart to listen on
 # (comment out to disable)
@@ -21,29 +21,30 @@ if [ -f kill.sh ]; then
     ./kill.sh
 fi
 
-if [ -z "${FCP_ADDR}" ]; then
-    FCP_ADDR="0.0.0.0"
-fi
-if [ -z "${FCP_PORT}" ]; then
-    FCP_PORT=0
-fi
-
 pids=()
 
 for port in "${PORTS_UDP[@]}"; do
-    python3 server.py udp ${port} 0.0.0.0 0 ${FCP_ADDR} ${FCP_PORT} &> log/udp${port}.out &
+    if [ "${FCP_ADDR}" ] && [ "${FCP_PORT}" ]; then
+        python3 server.py udp ${port} 0.0.0.0 0 ${FCP_ADDR} ${FCP_PORT} &> log/udp${port}.out &
+    else
+        python3 server.py udp ${port} 0.0.0.0 0 &> log/udp${port}.out &
+    fi
     pids+=("$!")
 done
 
 for port in "${PORTS_TCP[@]}"; do
-    python3 server.py tcp ${port} 0.0.0.0 0 ${FCP_ADDR} ${FCP_PORT} &> log/tcp${port}.out &
+    if [ "${FCP_ADDR}" ] && [ "${FCP_PORT}" ]; then
+        python3 server.py tcp ${port} 0.0.0.0 0 ${FCP_ADDR} ${FCP_PORT} &> log/tcp${port}.out &
+    else
+        python3 server.py tcp ${port} 0.0.0.0 0 &> log/tcp${port}.out &
+    fi
     pids+=("$!")
 done
 
-if [ "${PORT_CP}" ]; do
+if [ "${PORT_CP}" ]; then
     python3 counterpart.py 1257 &> cp57.out &
     pids+=("$!")
-done
+fi
 
 temp=""
 for pid in "${pids[@]}"; do
