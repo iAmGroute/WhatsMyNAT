@@ -115,7 +115,7 @@ dmypy.json
 
 
 # Server list
-/serverList.py
+#/serverList.py
 
 # Temporary scripts
 /startServers.sh
