@@ -118,7 +118,7 @@ dmypy.json
 #/serverList.py
 
 # Temporary scripts
-/startServers.sh
+#/startServers.sh
 /kill.sh
 
 # Log output
