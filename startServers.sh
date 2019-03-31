@@ -42,7 +42,7 @@ for port in "${PORTS_TCP[@]}"; do
 done
 
 if [ "${PORT_CP}" ]; then
-    python3 counterpart.py 1257 &> cp57.out &
+    python3 counterpart.py ${PORT_CP} &> log/cp${PORT_CP}.out &
     pids+=("$!")
 fi
 
