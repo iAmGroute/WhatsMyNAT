@@ -40,7 +40,7 @@ class ClientTCP:
         try:
             self.con.connect((serverAddr, serverPort))
         except (socket.error, ConnectionError):
-            log.error('Couldn\'t connect to [{0}]:{1}'.format(address, port))
+            log.error('Couldn\'t connect to [{0}]:{1}'.format(serverAddr, serverPort))
             return None
 
         try:
