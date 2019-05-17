@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # UDP Ports to listen on
-PORTS_UDP=( {1260..1263} )
+PORTS_UDP=( 80 443 123 {1260..1261} )
 
 # TCP Ports to listen on
-PORTS_TCP=( {1260..1263} )
+PORTS_TCP=( 80 443 123 {1260..1261} )
 
 # UDP port for counterpart to listen on
 # (comment out to disable)
