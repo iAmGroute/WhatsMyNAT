@@ -11,8 +11,8 @@ log = logging.getLogger(__name__)
 class ClientTCP:
 
     def __init__(self, port, address='0.0.0.0'):
-        self.con  = Connector(log, socket.SOCK_STREAM, 2, port, address)
-        self.conL = Connector(log, socket.SOCK_STREAM, 2, port, address)
+        self.con  = Connector(log, Connector.new(socket.SOCK_STREAM, 2, port, address))
+        self.conL = Connector(log, Connector.new(socket.SOCK_STREAM, 2, port, address))
         self.conL.listen()
 
     def __enter__(self):
@@ -30,7 +30,7 @@ class ClientTCP:
             data = self.con.recv(1024)
             reply = parseReply(data, token)
             return reply
-        except (socket.error, ConnectionError) as e:
+        except OSError as e:
             log.warn(e)
             return None
 

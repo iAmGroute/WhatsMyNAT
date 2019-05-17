@@ -13,8 +13,8 @@ class Counterpart:
     def __init__(self, port, address='0.0.0.0', probePort=0, probeAddress='0.0.0.0'):
         self.probePort    = probePort
         self.probeAddress = probeAddress
-        self.con   = Connector(log, socket.SOCK_DGRAM, None, port, address)
-        self.conPU = Connector(logPU, socket.SOCK_DGRAM, 2, probePort, probeAddress)
+        self.con   = Connector(log,   Connector.new(socket.SOCK_DGRAM, None,      port,      address))
+        self.conPU = Connector(logPU, Connector.new(socket.SOCK_DGRAM,    2, probePort, probeAddress))
 
     def task(self):
         data, addr = self.con.recvfrom(1024)
@@ -30,11 +30,11 @@ class Counterpart:
         log.info('    destination: [{0}]:{1}'.format(remoteAddr, remotePort))
 
         if token[0] == b'T'[0]:
-            with Connector(logPT, socket.SOCK_STREAM, 2, self.probePort, self.probeAddress) as conPT:
+            with Connector(logPT, Connector.new(socket.SOCK_STREAM, 2, self.probePort, self.probeAddress)) as conPT:
                 try:
                     conPT.connect((remoteAddr, remotePort))
                     conPT.sendall(data)
-                except (socket.error, ConnectionError) as e:
+                except OSError as e:
                     logPT.exception(e)
                     pass
         elif token[0] == b'U'[0]:
